@@ -1,0 +1,14 @@
+#color-one,
+#color-two,
+#color-three,
+#color-four,
+#color-five {
+  display: inline-block;
+  height: 50px;
+  width: 50px;
+  border: 2px solid black;
+}
+
+.fetch-button {
+  display: block;
+}
