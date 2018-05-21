@@ -1,14 +1,17 @@
-const fetchButton = document.querySelector('.fetch-button');
-
-
 const getStuff = async () => {
-  let projectResponse = await fetch('/api/v1/projects');
-  let parsedProjectResponse = await projectResponse.json();
-  let paletteResponse = await fetch('/api/v1/palettes');
-  let parsedPaletteResponse = await paletteResponse.json();
+  let projectResponse = await fetchJson('/api/v1/project');
+  let paletteResponse = await fetchJson('api/v1/palettes');
+  localStorage.setItem('projects', JSON.stringify(projectResponse));
+  localStorage.setItem('palettes', JSON.stringify(paletteResponse));
+  displayProjects(projectResponse, paletteResponse);
+}
 
-  console.log(parsedProjectResponse);
-  console.log(parsedPaletteResponse);
+const displayProjects = (projects, palettes) => {
+}
+
+const fetchJson = async (url) => {
+  const response = await fetch(url);
+  return response.json();
 }
 
 const generateRandomColor = () => {
@@ -32,6 +35,6 @@ const renderPaletteBoxes = () => {
   createPaletteValues(colorBoxes);
 }
 
-fetchButton.addEventListener('click', renderPaletteBoxes);
-
+const paletteButton = document.querySelector('.palette-button');
+paletteButton.addEventListener('click', renderPaletteBoxes);
 window.addEventListener('load', getStuff);

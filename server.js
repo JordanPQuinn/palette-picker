@@ -1,36 +1,43 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-app.set('port', process.env.PORT || 3000);
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-app.locals.title = 'Palette Picker';
 
+app.set('port', process.env.PORT || 3000);
+app.locals.title = 'Palette Picker';
 app.use(bodyParser.json());
-app.use(express.static('public'));
 
 app.enable('trust proxy');
 
-app.get('/api/v1/projects', (request, response) => {
-  database('projects').select()
-    .then((projects) => {
-        return response.status(200).json(projects);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    })
+app.use(function (req, res, next) {
+  if (req.secure || environment !== 'production') {
+    next();
+  } else {
+    res.redirect('https://' + req.headers.host + req.url);
+  }
 });
 
-app.get('api/v1/palettes', (request, response) => {
-  database('palettes').select()
-    .then((palettes) => {
-      return response.status(200).json(projects);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    })
-});
+app.use(express.static('public'));
+
+app.get('/api/v1/project', async (request, response) => {
+  try {
+    const projects = await database('project').select()
+    return response.status(200).json(projects);
+  } catch (error) {
+    return response.status(500).json({ error });
+  }
+})
+
+app.get('/api/v1/palettes', async (request, response) => {
+  try {
+    const palettes = await database('palettes')
+    return response.status(200).json(palettes);
+  } catch (error) {
+    return response.status(500).json({ error });
+  }
+})
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
