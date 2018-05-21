@@ -1,8 +1,4 @@
-#color-one,
-#color-two,
-#color-three,
-#color-four,
-#color-five {
+.color-box {
   display: inline-block;
   height: 50px;
   width: 50px;
