@@ -2,9 +2,13 @@ const fetchButton = document.querySelector('.fetch-button');
 
 
 const getStuff = async () => {
-  let response = await fetch('/api/v1/projects');
-  let parsedResponse = await response.json();
-  console.log(parsedResponse);
+  let projectResponse = await fetch('/api/v1/projects');
+  let parsedProjectResponse = await projectResponse.json();
+  let paletteResponse = await fetch('/api/v1/palettes');
+  let parsedPaletteResponse = await paletteResponse.json();
+
+  console.log(parsedProjectResponse);
+  console.log(parsedPaletteResponse);
 }
 
 const generateRandomColor = () => {
