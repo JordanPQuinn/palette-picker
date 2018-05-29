@@ -7,6 +7,11 @@ const getStuff = async () => {
 }
 
 const displayProjects = (projects, palettes) => {
+  let projectMap = projects.map(project => {
+    let filteredPalettes = palettes.filter(palette => palette.project_id === project.id)
+    return { ...project, palettes: [...filteredPalettes]}
+  });
+  let rendered = projectMap.map(project)
 }
 
 const fetchJson = async (url) => {
