@@ -3,15 +3,27 @@ const getStuff = async () => {
   let paletteResponse = await fetchJson('api/v1/palettes');
   localStorage.setItem('projects', JSON.stringify(projectResponse));
   localStorage.setItem('palettes', JSON.stringify(paletteResponse));
-  displayProjects(projectResponse, paletteResponse);
+  createProjects(projectResponse, paletteResponse);
 }
 
-const displayProjects = (projects, palettes) => {
+const createProjects = (projects, palettes) => {
   let projectMap = projects.map(project => {
     let filteredPalettes = palettes.filter(palette => palette.project_id === project.id)
     return { ...project, palettes: [...filteredPalettes]}
   });
-  let rendered = projectMap.map(project)
+  projectMap.map(project => {
+    $('.project-box').prepend(`<h1> ${project.name} </h1>`)
+    project.palettes.map(palette => {
+          $('.project-box').append(`<h3> ${palette.name} </h3>`)
+      palette.colors.forEach(color => {
+        $('.project-box').append(`<div class='append-box' style="background-color: ${color}"/>`)
+      });
+    });
+  });
+}
+
+const displayProjects = (projectDisplay) => {
+  $('.project-box').append(projectDisplay);
 }
 
 const fetchJson = async (url) => {

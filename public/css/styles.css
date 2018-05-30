@@ -1,4 +1,5 @@
-.color-box {
+.color-box,
+.append-box {
   display: inline-block;
   height: 50px;
   width: 50px;
