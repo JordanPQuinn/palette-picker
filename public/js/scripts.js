@@ -1,16 +1,52 @@
-const getStuff = async () => {
+const getPalettes = async () => {
   let projectResponse = await fetchJson('/api/v1/project');
   let paletteResponse = await fetchJson('api/v1/palettes');
+  setSelectionOptions(projectResponse);
   localStorage.setItem('projects', JSON.stringify(projectResponse));
   localStorage.setItem('palettes', JSON.stringify(paletteResponse));
-  createProjects(projectResponse, paletteResponse);
+  displayProjects(projectResponse, paletteResponse);
 }
 
-const createProjects = (projects, palettes) => {
+const setSelectionOptions = (projects) => {
+  projects.forEach(project => {
+      $('#project-dropdown').append($('<option>', { value: project.id, text: project.name }));
+  });
+};
+
+postPalette = async (e) => {
+  e.preventDefault();
+  const body = JSON.parse(localStorage.getItem('paletteToSave'));
+
+  await postToDb('api/v1/palettes', body);
+  getPalettes();
+}
+
+const postToDb = (url, body) => {
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(body), 
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  })
+}
+
+setPaletteToSave = (e) => {
+  const parsedPalette = JSON.parse(localStorage.getItem('generatedColors'));
+  const paletteToSave = { 
+    project_id: e.path[1][0].value, 
+    colors: parsedPalette, 
+    name: e.path[1][1].value 
+  }
+  localStorage.setItem('paletteToSave', JSON.stringify(paletteToSave));
+}
+
+const displayProjects = (projects, palettes) => {
   let projectMap = projects.map(project => {
     let filteredPalettes = palettes.filter(palette => palette.project_id === project.id)
     return { ...project, palettes: [...filteredPalettes]}
   });
+  $('.project-box').empty();
   projectMap.map(project => {
     $('.project-box').prepend(`<h1> ${project.name} </h1>`)
     project.palettes.map(palette => {
@@ -20,10 +56,6 @@ const createProjects = (projects, palettes) => {
       });
     });
   });
-}
-
-const displayProjects = (projectDisplay) => {
-  $('.project-box').append(projectDisplay);
 }
 
 const fetchJson = async (url) => {
@@ -42,9 +74,13 @@ const generateRandomColor = () => {
 }
 
 const createPaletteValues = (colorBoxes) => {
+  let storage = [];
   colorBoxes.forEach(box => {
-    box.style.backgroundColor = generateRandomColor();
+    let generatedColor = generateRandomColor();
+    storage.push(generatedColor);
+    box.style.backgroundColor = generatedColor;
   });
+  localStorage.setItem('generatedColors', JSON.stringify(storage));
 }
 
 const renderPaletteBoxes = () => {
@@ -53,5 +89,9 @@ const renderPaletteBoxes = () => {
 }
 
 const paletteButton = document.querySelector('.palette-button');
+const paletteSubmit = document.querySelector('#palette-submit');
+const newPaletteForm = document.querySelector('#new-palette');
 paletteButton.addEventListener('click', renderPaletteBoxes);
-window.addEventListener('load', getStuff);
+newPaletteForm.addEventListener('change', setPaletteToSave);
+paletteSubmit.addEventListener('click', postPalette);
+window.addEventListener('load', getPalettes);
