@@ -36,6 +36,16 @@ postPalette = async (e) => {
   getPalettes();
 }
 
+postProject = async (e) => {
+  e.preventDefault();
+  const body = {
+    name: e.path[1][0].value
+  }
+
+  await postToDb('api/v1/project', body);
+  getPalettes();
+}
+
 const postToDb = (url, body) => {
   fetch(url, {
     method: 'POST',
@@ -108,8 +118,10 @@ const renderPaletteBoxes = () => {
 
 const paletteButton = document.querySelector('.palette-button');
 const paletteSubmit = document.querySelector('#palette-submit');
+const projectSubmit = document.querySelector('#project-submit');
 const newPaletteForm = document.querySelector('#new-palette');
 paletteButton.addEventListener('click', renderPaletteBoxes);
 newPaletteForm.addEventListener('change', setPaletteToSave);
 paletteSubmit.addEventListener('click', postPalette);
+projectSubmit.addEventListener('click', postProject);
 window.addEventListener('load', getPalettes);
