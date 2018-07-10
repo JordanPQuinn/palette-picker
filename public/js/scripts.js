@@ -13,6 +13,21 @@ const setSelectionOptions = (projects) => {
   });
 };
 
+$('.project-box').on('click', function (event) {
+    if ($(event.target).hasClass('far')) {
+      removePalette($($(event.target).closest('h3')[0]).text())
+    }
+});
+
+removePalette = async (paletteName) => {
+  const palettes = await fetchJson('api/v1/palettes');
+  const id = palettes.find(palette => palette.name == paletteName).id;
+  await fetch(`/api/v1/palettes/${id}`, {
+    method: 'DELETE'
+  });
+  getPalettes();
+}
+
 postPalette = async (e) => {
   e.preventDefault();
   const body = JSON.parse(localStorage.getItem('paletteToSave'));
@@ -50,9 +65,12 @@ const displayProjects = (projects, palettes) => {
   projectMap.map(project => {
     $('.project-box').prepend(`<h1> ${project.name} </h1>`)
     project.palettes.map(palette => {
-          $('.project-box').append(`<h3> ${palette.name} </h3>`)
+          $('.project-box').append(`<h3>${palette.name}<i class="far fa-trash-alt" id="remove"></i></h3>`
+          )
       palette.colors.forEach(color => {
-        $('.project-box').append(`<div class='append-box' style="background-color: ${color}"/>`)
+        $('.project-box').append(`
+          <div class='append-box' style="background-color: ${color}"/>
+          `)
       });
     });
   });

@@ -68,7 +68,7 @@ app.post('/api/v1/palettes', (request, response) => {
         .send({ error: `You forgot to supply a ${param}` })
     }
   }
-  
+
   database('palettes').insert(paletteToPost, 'id')
     .then(palette => {
       response.status(201).json({ id: palette[0] })
@@ -80,7 +80,7 @@ app.post('/api/v1/palettes', (request, response) => {
 
 app.delete('/api/v1/palettes/:id', async (request, response) => {
   const { id } = request.params;
-  database('palette').where('id', id).del()
+  database('palettes').where('id', id).del()
     .then( paletteRemoved => {
       response.status(202).json({ id: paletteRemoved.id })
     })

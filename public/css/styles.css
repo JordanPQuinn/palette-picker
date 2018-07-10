@@ -9,3 +9,11 @@
 .palette-button {
   display: block;
 }
+
+#remove {
+  display: inline-block;
+}
+
+#remove:hover {
+  cursor: pointer;
+}
