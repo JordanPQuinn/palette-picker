@@ -8,6 +8,7 @@ const getPalettes = async () => {
 }
 
 const setSelectionOptions = (projects) => {
+   $('#project-dropdown').empty();
   projects.forEach(project => {
       $('#project-dropdown').append($('<option>', { value: project.id, text: project.name }));
   });
@@ -30,10 +31,16 @@ removePalette = async (paletteName) => {
 
 postPalette = async (e) => {
   e.preventDefault();
-  const body = JSON.parse(localStorage.getItem('paletteToSave'));
+  const parsedPalette = JSON.parse(localStorage.getItem('generatedColors'));
+  const body = { 
+    project_id: e.path[1][0].value, 
+    colors: parsedPalette, 
+    name: e.path[1][1].value 
+  }
 
   await postToDb('api/v1/palettes', body);
   getPalettes();
+  clearInputs();
 }
 
 postProject = async (e) => {
@@ -44,7 +51,14 @@ postProject = async (e) => {
 
   await postToDb('api/v1/project', body);
   getPalettes();
+  clearInputs();
 }
+
+const clearInputs = () => {
+  $('#project-name').val('');
+  $('#palette-name').val('');
+}
+
 
 const postToDb = (url, body) => {
   fetch(url, {
@@ -56,16 +70,6 @@ const postToDb = (url, body) => {
   })
 }
 
-setPaletteToSave = (e) => {
-  const parsedPalette = JSON.parse(localStorage.getItem('generatedColors'));
-  const paletteToSave = { 
-    project_id: e.path[1][0].value, 
-    colors: parsedPalette, 
-    name: e.path[1][1].value 
-  }
-  localStorage.setItem('paletteToSave', JSON.stringify(paletteToSave));
-}
-
 const displayProjects = (projects, palettes) => {
   let projectMap = projects.map(project => {
     let filteredPalettes = palettes.filter(palette => palette.project_id === project.id)
@@ -73,14 +77,11 @@ const displayProjects = (projects, palettes) => {
   });
   $('.project-box').empty();
   projectMap.map(project => {
-    $('.project-box').prepend(`<h1> ${project.name} </h1>`)
+    $('.project-box').append(`<h1> ${project.name} </h1>`)
     project.palettes.map(palette => {
-          $('.project-box').append(`<h3>${palette.name}<i class="far fa-trash-alt" id="remove"></i></h3>`
-          )
+      $('.project-box').append(`<h3>${palette.name}<i class="far fa-trash-alt" id="remove"></i></h3>`)
       palette.colors.forEach(color => {
-        $('.project-box').append(`
-          <div class='append-box' style="background-color: ${color}"/>
-          `)
+        $('.project-box').append(`<div class='append-box' style="background-color: ${color}"/>`)
       });
     });
   });
@@ -107,6 +108,7 @@ const createPaletteValues = (colorBoxes) => {
     let generatedColor = generateRandomColor();
     storage.push(generatedColor);
     box.style.backgroundColor = generatedColor;
+    box.innerText = (generatedColor);
   });
   localStorage.setItem('generatedColors', JSON.stringify(storage));
 }
@@ -121,7 +123,6 @@ const paletteSubmit = document.querySelector('#palette-submit');
 const projectSubmit = document.querySelector('#project-submit');
 const newPaletteForm = document.querySelector('#new-palette');
 paletteButton.addEventListener('click', renderPaletteBoxes);
-newPaletteForm.addEventListener('change', setPaletteToSave);
 paletteSubmit.addEventListener('click', postPalette);
 projectSubmit.addEventListener('click', postProject);
 window.addEventListener('load', getPalettes);

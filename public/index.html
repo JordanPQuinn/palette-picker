@@ -1,44 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">  <link rel='stylesheet' href='./css/styles.css'>
-  <title>Palette-Picker</title>
-</head>
-<body>
-  <h1> PICK YO PALETTE </h1>
-  <div id='color-one' class='color-box'> 
-      Color 1 
-  </div>
-  <div id='color-two' class='color-box'> 
-    Color 2 
-  </div>
-  <div id='color-three' class='color-box'> 
-    Color 3 
-  </div>
-  <div id='color-four' class='color-box'> 
-    Color 4 
-  </div>
-  <div id='color-five' class='color-box'> 
-    Color 5 
-  </div>
-  <button class='palette-button'> Generate a palette! </button>
-  <form id="new-palette">
-    <select id="project-dropdown">
-    </select>
-    <input type="text" id="palette-name" placeholder="Palette name" />
-    <button id="palette-submit"> Save palette </button>
-  </form>
-  <div> 
-    <h1> Projects </h1>
-    <section class='project-box'>
+  <head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Gaegu|Roboto" rel="stylesheet">  
+    <link rel='stylesheet' href='./css/styles.css'>
+    <title>Palette-Picker</title>
+  </head>
+  <body>
+    <header class='page-head'>
+        <h1>Palette-Picker</h1>
+    </header>
+    <section class='palette-box'>
+      <article id='color-one' class='color-box'></article>
+      <article id='color-two' class='color-box'></article>
+      <article id='color-three' class='color-box'></article>
+      <article id='color-four' class='color-box'></article>
+      <article id='color-five' class='color-box'></article>
+    </section>
+    <button class='palette-button'>Generate a palette!</button>
+    <form id='new-palette'>
+      <select id='project-dropdown'></select>
+      <input type='text' id='palette-name' placeholder='Palette name' />
+      <button id='palette-submit'> Save palette </button>
+    </form>
+    <section> 
+      <h1 class='project-header'> Projects </h1>
       <h3> Add a new project </h3>
       <form>
-        <input type="text" placeholder="Project name" id="project-name"/>
-        <button id="project-submit"> Save project </button>
+        <input type='text' placeholder='Project name' id='project-name'/>
+        <button id='project-submit'> Save project </button>
       </form>
+      <section class='project-box'></section>
     </section>
-  </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src='./js/scripts.js' type ='text/javascript'></script>
-</body>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script src='./js/scripts.js' type ='text/javascript'></script>
+  </body>
 </html>
