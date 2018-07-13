@@ -1,13 +1,13 @@
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('palette').del()
+  return knex('project').del()
     .then(function () {
       return Promise.all([
         knex('project').insert({
           name: 'test-projects'
         }, 'id')
         .then(project => {
-          return knex('palette').insert([
+          return knex('palettes').insert([
             {
               name: 'palette1', 
               project_id: project[0], 
@@ -20,7 +20,7 @@ exports.seed = function(knex, Promise) {
             },
           ])
         })  
-        .then(() => console.log('Seeding complete!'))
+        .then(() => console.log('Data seeded!'))
         .catch( error => console.log(`Error seeding data: ${error}`))
       ])
   })

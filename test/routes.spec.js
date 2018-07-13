@@ -1,3 +1,7 @@
+const environment = 'test';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
+
 const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
@@ -31,7 +35,6 @@ describe('Client Routes', () => {
 });
 
 describe('API Routes', () => {
-
   beforeEach( done => {
     database.migrate.rollback()
     .then( () => {
@@ -41,8 +44,26 @@ describe('API Routes', () => {
         .then( () => {
           done();
         });
-      });k
+      });
     });
   });
 
+  describe('GET /api/v1/project', () => {
+    it('should get all projects', () => {
+      return chai.request(server)
+      .get('/api/v1/project')
+      .then(response => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('array');
+        response.body.length.should.equal(1);
+        response.body[0].should.have.property('id');
+        response.body[0].should.have.property('name');
+        response.body[0].name.should.equal('test-projects');
+        response.body[0].should.have.property('created_at');
+        response.body[0].should.have.property('updated_at');
+      });
+    });
+  });
 });
+    
