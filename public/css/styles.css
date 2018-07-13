@@ -2,6 +2,11 @@
   font-family: 'Roboto', sans-serif;
 }
 
+button:focus,
+input:focus {
+  outline: 0;
+}
+
 .page-head h1,
 .project-header {
   font-family: 'Gaegu', cursive;
@@ -11,8 +16,7 @@
   text-align: center;
 }
 
-.color-box,
-.append-box {
+.color-box {
   display: inline-flex;
   justify-content: center;
   height: 20rem;
@@ -20,6 +24,25 @@
   border: 2px solid black;
   margin-right: 2px;
   color: black;
+  position: relative;
+}
+
+.append-box {
+  display: inline-flex;
+  justify-content: center;
+  height: 2rem;
+  width: 2rem;
+  border: 2px solid black;
+  margin-right: 2px;
+  position: relative;
+}
+
+.hex-text {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(192, 192, 192, .3)
 }
 
 .palette-box {
@@ -31,8 +54,49 @@
   justify-content: center;
 }
 
-.palette-button {
+#project-dropdown,
+#palette-name,
+#project-name {
+  margin: 10px auto;
+  height: 1.4rem;
+}
+
+#project-dropdown {
+  width: 12rem;
   display: block;
+}
+
+#palette-name,
+#project-name {
+  width: 10rem;
+  margin: 0;
+}
+
+.submit-position {
+  margin: auto;
+  width: 12rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+#palette-submit,
+#project-submit {
+  display: inline-block;
+  margin-left: -5px;
+  height: 1.7rem;
+  width: 2.5rem;
+  border-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+button {
+  display: block;
+  margin: 10px auto;
+  width: 8rem;
+  height: 1.7rem;
+  border-radius: 5px;
 }
 
 #remove {
@@ -41,4 +105,59 @@
 
 #remove:hover {
   cursor: pointer;
+}
+
+.project-subheader,
+.project-subheader2 {
+  margin: 0 auto 10px auto;
+  width: 16rem;
+  font-size: 14px;
+}
+
+.project-subheader2 {
+  font-size: 16px;
+  font-family: 'Gaegu', cursive;
+  text-align: center;
+}
+
+.palette-subheader2 {
+  margin: auto;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.project-palettes p {
+  display: inline-block;
+}
+
+.palette-position {
+  width: 50%;
+}
+
+.project {
+  width: 50%;
+  height: 15rem;
+  overflow-y: scroll;
+}
+
+.project-name {
+  text-align: center;
+  font-family: 'Gaegu', cursive;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.project-box {
+  width: 100%;
+  display: inline-flex;
+  margin: auto;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.project-palettes {
+  margin: 10px auto 0 auto;
+  width: 50%;
 }

@@ -11,24 +11,39 @@
         <h1>Palette-Picker</h1>
     </header>
     <section class='palette-box'>
-      <article id='color-one' class='color-box'></article>
-      <article id='color-two' class='color-box'></article>
-      <article id='color-three' class='color-box'></article>
-      <article id='color-four' class='color-box'></article>
-      <article id='color-five' class='color-box'></article>
+      <article id='color-one' class='color-box'>
+        <div class='hex-text'></div>
+      </article>
+      <article id='color-two' class='color-box'>
+        <div class='hex-text'></div>
+      </article>
+      <article id='color-three' class='color-box'>
+        <div class='hex-text'></div>
+      </article>
+      <article id='color-four' class='color-box'>
+        <div class='hex-text'></div>
+      </article>
+      <article id='color-five' class='color-box'>
+        <div class='hex-text'></div>
+      </article>
     </section>
-    <button class='palette-button'>Generate a palette!</button>
+    <button class='palette-button'>Generate</button>
     <form id='new-palette'>
+      <h3 class='project-subheader'>Save to:</h3>
       <select id='project-dropdown'></select>
-      <input type='text' id='palette-name' placeholder='Palette name' />
-      <button id='palette-submit'> Save palette </button>
+      <div class='submit-position'>
+        <input type='text' id='palette-name' placeholder='Palette name' />
+        <button id='palette-submit'> Save</button>
+      </div>
     </form>
     <section> 
-      <h1 class='project-header'> Projects </h1>
-      <h3> Add a new project </h3>
+      <h1 class='project-header'>Projects</h1>
+      <h3 class='project-subheader'>Add new:</h3>
       <form>
-        <input type='text' placeholder='Project name' id='project-name'/>
-        <button id='project-submit'> Save project </button>
+        <div class='submit-position'>
+          <input type='text' placeholder='Project name' id='project-name'/>
+          <button id='project-submit'>Save</button>
+        </div>
       </form>
       <section class='project-box'></section>
     </section>

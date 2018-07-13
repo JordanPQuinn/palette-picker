@@ -16,7 +16,7 @@ const setSelectionOptions = (projects) => {
 
 $('.project-box').on('click', function (event) {
     if ($(event.target).hasClass('far')) {
-      removePalette($($(event.target).closest('h3')[0]).text())
+      removePalette($(event.target).closest('div').children('h3').text())
     }
 });
 
@@ -33,9 +33,9 @@ postPalette = async (e) => {
   e.preventDefault();
   const parsedPalette = JSON.parse(localStorage.getItem('generatedColors'));
   const body = { 
-    project_id: e.path[1][0].value, 
+    project_id: e.path[2][0].value, 
     colors: parsedPalette, 
-    name: e.path[1][1].value 
+    name: e.path[2][1].value 
   }
 
   await postToDb('api/v1/palettes', body);
@@ -46,7 +46,7 @@ postPalette = async (e) => {
 postProject = async (e) => {
   e.preventDefault();
   const body = {
-    name: e.path[1][0].value
+    name: e.path[2][0].value
   }
 
   await postToDb('api/v1/project', body);
@@ -59,7 +59,6 @@ const clearInputs = () => {
   $('#palette-name').val('');
 }
 
-
 const postToDb = (url, body) => {
   fetch(url, {
     method: 'POST',
@@ -71,20 +70,45 @@ const postToDb = (url, body) => {
 }
 
 const displayProjects = (projects, palettes) => {
-  let projectMap = projects.map(project => {
+  const projectsWithPalettes = projects.map(project => {
     let filteredPalettes = palettes.filter(palette => palette.project_id === project.id)
     return { ...project, palettes: [...filteredPalettes]}
   });
   $('.project-box').empty();
-  projectMap.map(project => {
-    $('.project-box').append(`<h1> ${project.name} </h1>`)
-    project.palettes.map(palette => {
-      $('.project-box').append(`<h3>${palette.name}<i class="far fa-trash-alt" id="remove"></i></h3>`)
-      palette.colors.forEach(color => {
-        $('.project-box').append(`<div class='append-box' style="background-color: ${color}"/>`)
-      });
-    });
-  });
+  const display = projectsWithPalettes.map(project => {
+    const palettesToAdd = getProjectDisplay(project.palettes);
+    return (`
+      <article class='project'>
+        <h3 class='project-name'>${project.name}</h3>
+        ${palettesToAdd}
+      </article>
+    `)
+  }).join('')
+
+  $('.project-box').prepend(display);
+}
+
+getProjectDisplay = (palettes) => {
+  return palettes.map(palette => {
+    const paletteColors = createColorBoxes(palette.colors).join('');
+    return (`
+      <div class='project-palettes'>
+        <div>
+          <h3 class='palette-subheader2'>${palette.name}</h3>
+          <p><i class='far fa-trash-alt' id='remove'></i></p>
+        </div>
+        ${paletteColors}
+      </div>
+    `)
+  })
+}
+
+createColorBoxes = (colors) => {
+  return colors.map( color => {
+    return (`
+      <div class="append-box" style="background-color:${color};"></div>
+    `)
+  })
 }
 
 const fetchJson = async (url) => {
@@ -108,7 +132,7 @@ const createPaletteValues = (colorBoxes) => {
     let generatedColor = generateRandomColor();
     storage.push(generatedColor);
     box.style.backgroundColor = generatedColor;
-    box.innerText = (generatedColor);
+    $(box).children('div').text(generatedColor);
   });
   localStorage.setItem('generatedColors', JSON.stringify(storage));
 }
@@ -121,7 +145,6 @@ const renderPaletteBoxes = () => {
 const paletteButton = document.querySelector('.palette-button');
 const paletteSubmit = document.querySelector('#palette-submit');
 const projectSubmit = document.querySelector('#project-submit');
-const newPaletteForm = document.querySelector('#new-palette');
 paletteButton.addEventListener('click', renderPaletteBoxes);
 paletteSubmit.addEventListener('click', postPalette);
 projectSubmit.addEventListener('click', postProject);
