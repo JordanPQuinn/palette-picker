@@ -5,6 +5,7 @@ const getPalettes = async () => {
   localStorage.setItem('projects', JSON.stringify(projectResponse));
   localStorage.setItem('palettes', JSON.stringify(paletteResponse));
   displayProjects(projectResponse, paletteResponse);
+  renderPaletteBoxes();
 }
 
 const setSelectionOptions = (projects) => {
@@ -20,7 +21,16 @@ $('.project-box').on('click', function (event) {
     }
 });
 
-removePalette = async (paletteName) => {
+$('.lock').on('click', function (event) {
+  const sectionId = $(this).closest('article')[0].id;
+  const colorIndex = parseInt(sectionId.split('color')[1]);
+  const currentLockedColors = getStoredColors('currentLockedColors');
+  currentLockedColors[colorIndex] 
+    ? unlockColor(colorIndex, this)
+    : lockColor(colorIndex, this);
+})
+
+const removePalette = async (paletteName) => {
   const palettes = await fetchJson('api/v1/palettes');
   const id = palettes.find(palette => palette.name == paletteName).id;
   await fetch(`/api/v1/palettes/${id}`, {
@@ -29,7 +39,7 @@ removePalette = async (paletteName) => {
   getPalettes();
 }
 
-postPalette = async (e) => {
+const postPalette = async (e) => {
   e.preventDefault();
   const parsedPalette = JSON.parse(localStorage.getItem('generatedColors'));
   const body = { 
@@ -43,7 +53,7 @@ postPalette = async (e) => {
   clearInputs();
 }
 
-postProject = async (e) => {
+const postProject = async (e) => {
   e.preventDefault();
   const body = {
     name: e.path[2][0].value
@@ -88,7 +98,7 @@ const displayProjects = (projects, palettes) => {
   $('.project-box').prepend(display);
 }
 
-getProjectDisplay = (palettes) => {
+const getProjectDisplay = (palettes) => {
   return palettes.map(palette => {
     const paletteColors = createColorBoxes(palette.colors).join('');
     return (`
@@ -103,7 +113,7 @@ getProjectDisplay = (palettes) => {
   })
 }
 
-createColorBoxes = (colors) => {
+const createColorBoxes = (colors) => {
   return colors.map( color => {
     return (`
       <div class="append-box" style="background-color:${color};"></div>
@@ -145,6 +155,7 @@ const renderPaletteBoxes = () => {
 const paletteButton = document.querySelector('.palette-button');
 const paletteSubmit = document.querySelector('#palette-submit');
 const projectSubmit = document.querySelector('#project-submit');
+
 paletteButton.addEventListener('click', renderPaletteBoxes);
 paletteSubmit.addEventListener('click', postPalette);
 projectSubmit.addEventListener('click', postProject);

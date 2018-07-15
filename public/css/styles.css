@@ -16,6 +16,11 @@ input:focus {
   text-align: center;
 }
 
+.lock,
+.unlock {
+  display: inline-block;
+}
+
 .color-box {
   display: inline-flex;
   justify-content: center;

@@ -32,7 +32,6 @@ app.get('/api/v1/project', async (request, response) => {
 
 app.post('/api/v1/project', async (request, response) => {
   const projectToPost = request.body;
-
   for (let param of ['name']) {
     if(!projectToPost[param]) {
       return response
@@ -43,7 +42,7 @@ app.post('/api/v1/project', async (request, response) => {
 
   database('project').insert(projectToPost, 'id')
     .then(project => {
-      response.status(201).json({ id: proj[0]})
+      response.status(201).json({ id: project[0]})
     })
     .catch(error => {
       response.status(500).json({ error });
