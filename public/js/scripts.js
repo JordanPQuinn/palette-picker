@@ -4,6 +4,7 @@ const getPalettes = async () => {
   setSelectionOptions(projectResponse);
   localStorage.setItem('projects', JSON.stringify(projectResponse));
   localStorage.setItem('palettes', JSON.stringify(paletteResponse));
+  localStorage.setItem('lockedColors', JSON.stringify({}));
   displayProjects(projectResponse, paletteResponse);
   renderPaletteBoxes();
 }
@@ -22,13 +23,30 @@ $('.project-box').on('click', function (event) {
 });
 
 $('.lock').on('click', function (event) {
-  const sectionId = $(this).closest('article')[0].id;
-  const colorIndex = parseInt(sectionId.split('color')[1]);
-  const currentLockedColors = getStoredColors('currentLockedColors');
-  currentLockedColors[colorIndex] 
-    ? unlockColor(colorIndex, this)
-    : lockColor(colorIndex, this);
-})
+  const index = $(this).closest('article')[0].id;
+  const lockedColors = JSON.parse(localStorage.getItem('lockedColors'));
+  lockedColors[index] ? 
+    unlock(lockedColors, index, this) 
+    : lock(lockedColors, index, this);
+}); 
+
+const lock = (lockedColors, index, element) => {
+  $(element).css('background-image', 'url(../assets/lock.svg)');
+  const colors = JSON.parse(localStorage.getItem('generatedColors'));
+  lockedColors[index] = colors[index];
+  localStorage.setItem('lockedColors', JSON.stringify(lockedColors));
+}
+
+const unlock = (lockedColors, index, element) => {
+  $(element).css('background-image', 'url(../assets/unlock.svg)');
+  delete lockedColors[index]
+  localStorage.setItem('lockedColors', JSON.stringify(lockedColors));
+}
+
+const checkLocked = (colorIndex) => {
+  const lockedColors = JSON.parse(localStorage.getItem('lockedColors'));
+  return lockedColors[colorIndex] ? lockedColors[colorIndex] :  generateRandomColor();
+}
 
 const removePalette = async (paletteName) => {
   const palettes = await fetchJson('api/v1/palettes');
@@ -139,7 +157,7 @@ const generateRandomColor = () => {
 const createPaletteValues = (colorBoxes) => {
   let storage = [];
   colorBoxes.forEach(box => {
-    let generatedColor = generateRandomColor();
+    let generatedColor = checkLocked(box.id)
     storage.push(generatedColor);
     box.style.backgroundColor = generatedColor;
     $(box).children('div').text(generatedColor);

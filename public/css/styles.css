@@ -16,9 +16,15 @@ input:focus {
   text-align: center;
 }
 
-.lock,
-.unlock {
+.lock {
+  position: absolute;
+  top: 40%;
   display: inline-block;
+  height: 50px;
+  width: 50px;
+  background-image: url('../assets/unlock.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .color-box {
