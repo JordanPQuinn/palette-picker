@@ -21,16 +21,16 @@ app.use(function (req, res, next) {
 
 app.use(express.static('public'));
 
-app.get('/api/v1/project', async (request, response) => {
+app.get('/api/v1/projects', async (request, response) => {
   try {
-    const projects = await database('project').select()
+    const projects = await database('projects').select()
     return response.status(200).json(projects);
   } catch (error) {
     return response.status(500).json({ error });
   }
 });
 
-app.post('/api/v1/project', async (request, response) => {
+app.post('/api/v1/projects', async (request, response) => {
   const projectToPost = request.body;
   for (let param of ['name']) {
     if(!projectToPost[param]) {
@@ -40,7 +40,7 @@ app.post('/api/v1/project', async (request, response) => {
     }
   }
 
-  database('project').insert(projectToPost, 'id')
+  database('projects').insert(projectToPost, 'id')
     .then(project => {
       response.status(201).json({ id: project[0]})
     })
@@ -81,7 +81,12 @@ app.delete('/api/v1/palettes/:id', async (request, response) => {
   const { id } = request.params;
   database('palettes').where('id', id).del()
     .then( paletteRemoved => {
-      response.status(202).json({ id: paletteRemoved.id })
+      if (paletteRemoved) {
+        response.status(204).json({ id: paletteRemoved.id })
+      }
+      else {
+        response.status(404).send({error: 'Resource not found'})
+      }
     })
 });
 

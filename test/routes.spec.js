@@ -35,7 +35,7 @@ describe('Client Routes', () => {
 });
 
 describe('API Routes', () => {
-  beforeEach( done => {
+  beforeEach(done => {
     database.migrate.rollback()
     .then( () => {
       database.migrate.latest()
@@ -48,10 +48,10 @@ describe('API Routes', () => {
     });
   });
 
-  describe('GET /api/v1/project', () => {
+  describe('GET /api/v1/projects', () => {
     it('should get all projects', () => {
       return chai.request(server)
-      .get('/api/v1/project')
+      .get('/api/v1/projects')
       .then(response => {
         response.should.have.status(200);
         response.should.be.json;
@@ -66,10 +66,10 @@ describe('API Routes', () => {
     });
   });
 
-  describe('POST /api/v1/project', () => {
+  describe('POST /api/v1/projects', () => {
    it('should post a new project', () => {
       return chai.request(server)
-      .post('/api/v1/project')
+      .post('/api/v1/projects')
       .send({
         name: 'New Project'
       })
@@ -86,7 +86,7 @@ describe('API Routes', () => {
 
     it('should return a 422 with appropriate param message when no name is provided', () => {
       return chai.request(server)
-      .post('/api/v1/project')
+      .post('/api/v1/projects')
       .send({
         // name: 'no new projects'
       })
@@ -143,7 +143,7 @@ describe('API Routes', () => {
 
     it('should return a 422 with appropriate param message when no name is provided', () => {
       return chai.request(server)
-      .post('/api/v1/project')
+      .post('/api/v1/projects')
       .send({
         // name: 'dopest-color',
         project_id: 1,
@@ -194,14 +194,21 @@ describe('API Routes', () => {
   });
 
   describe('DELETE /api/v1/palettes/:id', () => {
-    it('should return 202 on deleting a palette specified by an id', () => {
+    it('should return 204 on deleting a palette specified by an id', () => {
       return chai.request(server)
       .del('/api/v1/palettes/1')
       .then(response => {
-        response.should.have.status(202);
+        response.should.have.status(204);
+      });
+    });
+
+    it('should return a 404 status code when the delete request fails due to an invalid id', () => {
+      return chai.request(server)
+      .del('/api/v1/palettes/1001')
+      .then(response => {
+        response.should.have.status(404)
       });
     });
   });
-
 });
     
